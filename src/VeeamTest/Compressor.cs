@@ -19,16 +19,15 @@ namespace VeeamTest
             _parralellism = parralellism;
         }
 
-        public void Compress(string inputFile, string outputFile)
+        public void Compress(Stream input, Stream output)
         {
-            using (var filestream = File.Create(outputFile))
             using (var writer = new Consumer<Chunk>(
-                action: item => WriteSerialized(item, filestream)))
+                action: item => WriteSerialized(item, output)))
             using (var compressor = new Consumer<Chunk>(
                 action: item => CompressAndPush(item, writer),
                 degreeOfParallelism: _parralellism))
             {
-                ReadAndPush(inputFile, compressor);
+                ReadAndPush(input, compressor);
                 compressor.RequestCompletion();
                 compressor.Wait();
                 writer.RequestCompletion();
@@ -36,23 +35,20 @@ namespace VeeamTest
             }
         }
 
-        private void ReadAndPush(string filename, Consumer<Chunk> consumer)
+        private void ReadAndPush(Stream stream, Consumer<Chunk> consumer)
         {
-            using (var reader = File.OpenRead(filename))
+            var position = 0;
+            var bytesRead = 0;
+            var buffer = new byte[_bufferSize];
+
+            while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0)
             {
-                var position = 0;
-                var bytesRead = 0;
-                var buffer = new byte[_bufferSize];
+                var bytes = buffer.Take(bytesRead).ToArray();
+                var chunk = new Chunk(position, bytes);
 
-                while ((bytesRead = reader.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    var bytes = buffer.Take(bytesRead).ToArray();
-                    var chunk = new Chunk(position, bytes);
+                consumer.Enqueue(chunk);
 
-                    consumer.Enqueue(chunk);
-
-                    position++;
-                }
+                position++;
             }
         }
 

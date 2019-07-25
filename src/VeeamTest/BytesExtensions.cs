@@ -7,23 +7,26 @@ namespace VeeamTest
     {
         public static byte[] Unzip(this byte[] bytes)
         {
-            using (var readStream = new MemoryStream(bytes))
-            using (var zipper = new GZipStream(readStream, CompressionMode.Decompress))
             using (var writeStream = new MemoryStream())
             {
-                zipper.CopyTo(writeStream);
+                using (var readStream = new MemoryStream(bytes))
+                using (var zipper = new GZipStream(readStream, CompressionMode.Decompress))
+                {
+                    zipper.CopyTo(writeStream);
+                }
                 return writeStream.ToArray();
             }
         }
 
-
         public static byte[] Zip(this byte[] bytes)
         {
             using (var writeStream = new MemoryStream())
-            using (var zipper = new GZipStream(writeStream, CompressionMode.Compress))
-            using (var readStream = new MemoryStream(bytes))
             {
-                readStream.CopyTo(zipper);
+                using (var readStream = new MemoryStream(bytes))
+                using (var zipper = new GZipStream(writeStream, CompressionMode.Compress))
+                {
+                    readStream.CopyTo(zipper);
+                }
                 return writeStream.ToArray();
             }
         }

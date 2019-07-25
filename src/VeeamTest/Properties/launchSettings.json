@@ -2,7 +2,7 @@
   "profiles": {
     "VeeamTest": {
       "commandName": "Project",
-      "commandLineArgs": "decompress \"D:\\123\\out\"  \"D:\\123\\011 - Human Behaviour.flac\" "
+      "commandLineArgs": "decompress \"D:\\123\\out\"  \"D:\\123\\Akira2.mkv\" "
     }
   }
 }

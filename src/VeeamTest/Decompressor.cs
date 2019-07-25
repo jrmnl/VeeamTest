@@ -15,11 +15,10 @@ namespace VeeamTest
             _parralellism = parralellism;
         }
 
-        public void Decompress(string inputFile, string outputFile)
+        public void Decompress(Stream input, Stream output)
         {
-            using (var filestream = File.Create(outputFile))
             using (var writer = new Consumer<byte[]>(
-                action: item => Write(item, filestream)))
+                action: item => Write(item, output)))
             {
                 var sorter = new SortedIterator<byte[]>(writer.Enqueue);
                 using (var orderer = new Consumer<Chunk>(
@@ -28,7 +27,7 @@ namespace VeeamTest
                     action: item => DecompressAndPush(item, orderer),
                     degreeOfParallelism: _parralellism))
                 {
-                    ReadAndPush(inputFile, decompressor);
+                    ReadAndPush(input, decompressor);
 
                     decompressor.RequestCompletion();
                     decompressor.Wait();
@@ -42,16 +41,13 @@ namespace VeeamTest
             }
         }
 
-        private static void ReadAndPush(string filename, Consumer<Chunk> consumer)
+        private static void ReadAndPush(Stream stream, Consumer<Chunk> consumer)
         {
-            using (var reader = File.OpenRead(filename))
+            var formatter = new BinaryFormatter();
+            while (stream.Position != stream.Length)
             {
-                var formatter = new BinaryFormatter();
-                while (reader.Position != reader.Length)
-                {
-                    var chunk = (Chunk)formatter.Deserialize(reader);
-                    consumer.Enqueue(chunk);
-                }
+                var chunk = (Chunk)formatter.Deserialize(stream);
+                consumer.Enqueue(chunk);
             }
         }
 
