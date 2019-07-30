@@ -1,8 +1,8 @@
 # VeeamTest
 
-## Prerequisites
+## Системные требования
 
-.NET Core 2.2 SDK or greater
+.NET Core 2.2 SDK или выше
 
 ## Описание
 
