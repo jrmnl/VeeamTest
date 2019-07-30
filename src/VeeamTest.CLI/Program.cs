@@ -6,8 +6,6 @@ namespace VeeamTest.CLI
 {
     public static class Program
     {
-        private const int BUFFER_SIZE = 1024 * 1024;
-
         public static int Main(string[] args)
         {
             try
@@ -24,6 +22,11 @@ namespace VeeamTest.CLI
 
                 return 0;
             }
+            catch (OutOfMemoryException)
+            {
+                Console.WriteLine("Not enough memory, please lower buffer-size value in config.json");
+                return 1;
+            }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
@@ -33,10 +36,12 @@ namespace VeeamTest.CLI
 
         private static Action<Stream, Stream> GetAction(string actionName)
         {
+            var config = ConfigBuilder.Build();
+
             switch (actionName)
             {
                 case "compress":
-                    return (input, output) => new Compressor(BUFFER_SIZE, Environment.ProcessorCount).Compress(input, output);
+                    return (input, output) => new Compressor(config.BufferSize, Environment.ProcessorCount).Compress(input, output);
 
                 case "decompress":
                     return (input, output) => new Decompressor(Environment.ProcessorCount).Decompress(input, output);

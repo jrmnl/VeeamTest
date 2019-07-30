@@ -9,23 +9,34 @@ namespace VeeamTest.MultithreadGZip
     public class Compressor
     {
         private readonly int _bufferSize;
-        private readonly int _parralellism;
+        private readonly int _degreeOfParallelism;
 
-        public Compressor(int bufferSize, int parralellism)
+        /// <param name="bufferSize">Size of chunk to compress</param>
+        /// <param name="degreeOfParallelism">Total threads for parralel compression.</param>
+        /// <exception cref="ArgumentOutOfRangeException">bufferSize or degreeOfParallelism is out of range</exception>
+        public Compressor(int bufferSize, int degreeOfParallelism)
         {
             if (bufferSize <= 0) throw new ArgumentOutOfRangeException(nameof(bufferSize));
-            if (parralellism <= 0) throw new ArgumentOutOfRangeException(nameof(parralellism));
+            if (degreeOfParallelism <= 0) throw new ArgumentOutOfRangeException(nameof(degreeOfParallelism));
             _bufferSize = bufferSize;
-            _parralellism = parralellism;
+            _degreeOfParallelism = degreeOfParallelism;
         }
 
+        /// <exception cref="ArgumentNullException">Input or output stream is nullable.</exception>
+        /// <exception cref="ArgumentException">Input stream is not readable.</exception>
+        /// <exception cref="ArgumentException">Output stream is not writable.</exception>
         public void Compress(Stream input, Stream output)
         {
+            if (input == null) throw new ArgumentNullException(nameof(input));
+            if (output == null) throw new ArgumentNullException(nameof(output));
+            if (!input.CanRead) throw new ArgumentException("Input stream is not readable", nameof(input));
+            if (!output.CanWrite) throw new ArgumentException("Output stream is not writable", nameof(output));
+
             using (var writer = new Consumer<Chunk>(
                 action: item => WriteSerialized(item, output)))
             using (var compressor = new Consumer<Chunk>(
                 action: item => CompressAndPush(item, writer),
-                degreeOfParallelism: _parralellism))
+                degreeOfParallelism: _degreeOfParallelism))
             {
                 ReadAndPush(input, compressor);
             }

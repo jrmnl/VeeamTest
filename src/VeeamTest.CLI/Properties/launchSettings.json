@@ -2,7 +2,7 @@
   "profiles": {
     "VeeamTest": {
       "commandName": "Project",
-      "commandLineArgs": "decompress \"D:\\123\\out\"  \"D:\\123\\Akira2.mkv\" "
+      "commandLineArgs": "compress \"D:\\123\\AkiraZ\" \"D:\\123\\Akira2\"  "
     }
   }
 }
