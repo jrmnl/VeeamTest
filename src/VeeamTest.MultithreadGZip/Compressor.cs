@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Buffers;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
+using VeeamTest.MultithreadGZip.Multithreading;
 
-namespace VeeamTest
+namespace VeeamTest.MultithreadGZip
 {
     public class Compressor
     {
@@ -28,10 +28,6 @@ namespace VeeamTest
                 degreeOfParallelism: _parralellism))
             {
                 ReadAndPush(input, compressor);
-                compressor.RequestCompletion();
-                compressor.Wait();
-                writer.RequestCompletion();
-                writer.Wait();
             }
         }
 

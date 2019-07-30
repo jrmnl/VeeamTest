@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.IO.Compression;
 
-namespace VeeamTest
+namespace VeeamTest.MultithreadGZip
 {
-    public static class BytesExtensions
+    internal static class BytesExtensions
     {
         public static byte[] Unzip(this byte[] bytes)
         {

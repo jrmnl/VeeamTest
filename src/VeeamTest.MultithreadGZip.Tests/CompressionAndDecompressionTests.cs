@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 
-namespace VeeamTest.Tests
+namespace VeeamTest.MultithreadGZip.Tests
 {
     [TestClass]
     public class CompressionAndDecompressionTests
@@ -24,8 +24,7 @@ namespace VeeamTest.Tests
 
                 decompressor.Decompress(compressed, decompressed);
 
-                var result = decompressed.ToArray();
-                CollectionAssert.AreEqual(expectedBytes, result);
+                CollectionAssert.AreEqual(expectedBytes, decompressed.ToArray());
             }
         }
     }

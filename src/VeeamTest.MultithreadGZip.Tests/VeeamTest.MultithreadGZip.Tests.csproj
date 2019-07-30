@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\VeeamTest\VeeamTest.csproj" />
+    <ProjectReference Include="..\VeeamTest.MultithreadGZip\VeeamTest.MultithreadGZip.csproj" />
   </ItemGroup>
 
 </Project>

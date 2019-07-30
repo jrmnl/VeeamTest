@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace VeeamTest.Tests
+namespace VeeamTest.MultithreadGZip.Tests
 {
     internal static class Helpers
     {

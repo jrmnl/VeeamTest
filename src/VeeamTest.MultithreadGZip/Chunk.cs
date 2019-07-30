@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VeeamTest
+namespace VeeamTest.MultithreadGZip
 {
     [Serializable]
     internal class Chunk

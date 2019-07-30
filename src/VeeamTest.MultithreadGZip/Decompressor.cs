@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using VeeamTest.MultithreadGZip.Multithreading;
 
-namespace VeeamTest
+namespace VeeamTest.MultithreadGZip
 {
     public class Decompressor
     {
@@ -28,16 +29,7 @@ namespace VeeamTest
                     degreeOfParallelism: _parralellism))
                 {
                     ReadAndPush(input, decompressor);
-
-                    decompressor.RequestCompletion();
-                    decompressor.Wait();
-
-                    orderer.RequestCompletion();
-                    orderer.Wait();
                 }
-
-                writer.RequestCompletion();
-                writer.Wait();
             }
         }
 

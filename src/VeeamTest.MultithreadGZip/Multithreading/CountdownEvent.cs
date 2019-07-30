@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
 
-namespace VeeamTest
+namespace VeeamTest.MultithreadGZip.Multithreading
 {
-    public class CountdownEvent : IDisposable
+    internal class CountdownEvent : IDisposable
     {
         private bool _isDisposed = false;
         private volatile int _counter;

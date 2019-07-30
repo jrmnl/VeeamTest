@@ -2,9 +2,9 @@
 using System.Collections.Concurrent;
 using System.Threading;
 
-namespace VeeamTest
+namespace VeeamTest.MultithreadGZip.Multithreading
 {
-    public class Consumer<T> : IDisposable
+    internal class Consumer<T> : IDisposable
     {
         private bool _isDisposed = false;
         private readonly BlockingCollection<T> _items;
@@ -57,6 +57,8 @@ namespace VeeamTest
         {
             if (!_isDisposed)
             {
+                RequestCompletion();
+                Wait();
                 _items.Dispose();
                 _event.Dispose();
 
