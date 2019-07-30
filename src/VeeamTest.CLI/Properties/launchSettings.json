@@ -1,8 +1,7 @@
 {
   "profiles": {
     "VeeamTest": {
-      "commandName": "Project",
-      "commandLineArgs": "compress \"D:\\123\\AkiraZ\" \"D:\\123\\Akira2\"  "
+      "commandName": "Project"
     }
   }
 }
